@@ -48,6 +48,7 @@ void pw_o::getcelldm()
 }
 void pw_o::printcelldm()
 {
+	printf("\n");
 	switch (ibrav)
 	{
 	case 1:
@@ -68,11 +69,12 @@ void pw_o::printcelldm()
 		printf("celldm(1)=%.8f, celldm(2)=%.8f, celldm(3)=%.8f, celldm(4)=%.8f", celldm[0], celldm[1], celldm[2], celldm[3]);
 		break;
 	}
-	printf(",\n\n");
+	printf(",\n");
 }
 void pw_o::in_pw_o(std::string path)
 {
 	int step = 1;
+	bool notfinal = true;
 	std::string data;
 	ifs.open(path);
 	getline(ifs, data);
@@ -94,12 +96,16 @@ void pw_o::in_pw_o(std::string path)
 			break;
 		}
 	}
-	printf("\n\033[7mstep 0\033[0m\n\n");
+	printf("\n\033[7mstep 0\033[0m\n");
 	while (getline(ifs, data))
 	{
 		if (data.substr(0, 24) == "     the Fermi energy is")
 		{
-			printf("Ef             eV          %s\n", data.substr(25, 11).c_str());
+			printf("\nEf             eV          %s\n", data.substr(25, 11).c_str());
+		}
+		else if (data[0] == '!')
+		{
+			printf("Total energy   Ry       %s\n", data.substr(32, 17).c_str());
 		}
 		else if (data.substr(0, 18) == "     Total force =")
 		{
@@ -108,11 +114,15 @@ void pw_o::in_pw_o(std::string path)
 		else if (data.substr(0, 38) == "          total   stress  (Ry/bohr**3)")
 		{
 			printf("P              kpar    %s\n", data.substr(70, 14).c_str());
-			printf("\n\033[7mstep %d\033[0m\n\n", step++);
+			if(notfinal)
+			{
+				printf("\n\033[7mstep %d\033[0m\n", step++);
+			}
 		}
 		else if (data == "Begin final coordinates")
 		{
 			printf("\n\033[7mFinal structure\033[0m\n");
+			notfinal = false;
 		}
 		else if (data.substr(0, 15) == "CELL_PARAMETERS")
 		{
@@ -126,6 +136,7 @@ void pw_o::in_pw_o(std::string path)
 		}
 		else if (data.substr(0, 16) == "ATOMIC_POSITIONS")
 		{
+			printf("\n");
 			for (size_t i = 0; i < atomic_poss.size(); i++)
 			{
 				//ifs >> atomic_poss[i].elm;
@@ -136,7 +147,7 @@ void pw_o::in_pw_o(std::string path)
 				getline(ifs, data);
 				printf("%s\n", data.c_str());
 			}
-			printf("\n");
+			//printf("\n");
 		}
 	}
 	ifs.close();
