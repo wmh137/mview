@@ -17,6 +17,9 @@ void pw_o::getcelldm()
 	case 1:
 		celldm[0] = cell_para[0] * alat;
 		break;
+	case 2:
+		celldm[0] = fabs(cell_para[0]) / 0.5 * alat;
+		break;
 	case 4:
 		celldm[0] = vecNorm(cell_para[0], cell_para[1], cell_para[2]);
 		celldm[2] = cell_para[8] / celldm[0];
@@ -52,6 +55,8 @@ void pw_o::printcelldm()
 	switch (ibrav)
 	{
 	case 1:
+		// as same as 2
+	case 2:
 		printf("celldm(1)=%.8f", celldm[0]);
 		break;
 	case 4:

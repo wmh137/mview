@@ -1,2 +1,2 @@
 g++ -O2 ./mview.cpp -o mview
-g++ -O2 ./qe/*.cpp ./qe/*.h -o qe -lm
+g++ -O2 ./qe/*.cpp ./qe/*.h -o qe/qe -lm

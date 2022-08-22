@@ -23,13 +23,6 @@ int main(int argc, char const *argv[])
         std::cout<<"error: MVIEWPATH not found\n";
         return 0;
     }
-    if(argc == 1)
-    {
-        // no input
-        std::cout<<"error: no input\n";
-        return 0;
-    }
-    std::string typeName = argv[1];
     std::map<std::string, typeConf> confMap;
     typeConf inTypeConf;
     std::ifstream inFile;
@@ -47,7 +40,18 @@ int main(int argc, char const *argv[])
         confMap[inTypeName] = inTypeConf;
     }
     inFile.close();
-    std::map<std::string, typeConf>::iterator confIter;
+    std::map<std::string, typeConf>::const_iterator confIter;
+    if(argc == 1)
+    {
+        // no input, show avail type
+        // std::cout<<"error: no input\n";
+        for(confIter = confMap.cbegin(); confIter != confMap.cend(); confIter++)
+        {
+            std::cout<<""<<confIter->first<<"\n\t"<<confIter->second.bashStr<<"\n";
+        }
+        return 0;
+    }
+    std::string typeName = argv[1];
     confIter = confMap.find(typeName);
     if(confIter == confMap.end())
     {
