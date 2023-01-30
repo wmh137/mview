@@ -2,8 +2,7 @@ import sys
 import matplotlib.pyplot as plt
 labelType = sys.argv[1]
 skipLine = int(sys.argv[2])
-pathNum = len(sys.argv)
-for i in range(3, pathNum):
+for i in range(3, len(sys.argv)):
     path = sys.argv[i]
     rFile = open(path, "r")
     X = []
